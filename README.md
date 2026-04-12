@@ -3,7 +3,7 @@
  
  🚀 Tính năng chính
  
-. Quản lý Sản phẩm: Thêm, sửa, xóa (xóa mềm), tìm kiếm và hiển thị danh sách sản phẩm.
+. Quản lý Sản phẩm: Thêm, sửa, xóa (xóa mềm), tìm kiếm, bộ lọc sắp xếp dữ liệu và hiển thị danh sách sản phẩm.
 
 . Quản lý Hình ảnh: Upload ảnh sản phẩm trực tiếp lên server.
 
@@ -11,7 +11,7 @@
 
 . Khôi phục dữ liệu: Cơ chế kiểm tra mã sản phẩm cũ để khôi phục dữ liệu đã xóa mềm thay vì tạo mới trùng lặp.
 
-. Định dạng tiền tệ: Hiển thị giá sản phẩm theo chuẩn VNĐ.
+. Quản lý Loại sản phẩm
 
 🛠 Công nghệ sử dụng
 
