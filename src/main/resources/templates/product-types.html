@@ -71,6 +71,69 @@
     .dropdown-content a:hover { background-color: #ddd; }
     .dropdown:hover .dropdown-content { display: block; }
     .dropdown:hover .dropbtn { background-color: #555; }
+    .btn-add {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 15px;
+    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-add:hover {
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+    transform: translateY(-2px);
+    color: white; /* Giữ màu chữ trắng khi hover */
+}
+
+/* Thêm icon điểm xuyết (Tùy chọn) */
+.btn-add::before {
+    content: "➕ ";
+    font-size: 14px;
+}
+    /* Style chung cho các nút trong bảng */
+.btn-action {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    margin: 2px;
+}
+
+/* Nút Sửa - Màu vàng cam (Warning) */
+.btn-edit {
+    background-color: #fff4e5;
+    color: #ff9800;
+    border: 1px solid #ff9800;
+}
+
+.btn-edit:hover {
+    background-color: #ff9800;
+    color: white;
+    box-shadow: 0 2px 5px rgba(255, 152, 0, 0.3);
+}
+
+/* Nút Xóa - Màu đỏ nhạt (Danger) */
+.btn-delete {
+    background-color: #ffebee;
+    color: #f44336;
+    border: 1px solid #f44336;
+}
+
+.btn-delete:hover {
+    background-color: #f44336;
+    color: white;
+    box-shadow: 0 2px 5px rgba(244, 67, 54, 0.3);
+}
 </style>
 
 <body>
@@ -92,9 +155,16 @@
 
 <div style="padding: 20px;">
     <h2>Quản lý loại</h2>
+
     <a th:href="@{/product-types/new}" class="btn btn-add">Tạo mới</a>
 </div>
+<div th:if="${message}" style="color: #155724; background-color: #d4edda; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+    [[${message}]]
+</div>
 
+<div th:if="${error}" style="color: #721c24; background-color: #f8d7da; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+    [[${error}]]
+</div>
     <table>
         <thead>
         <tr>
@@ -111,10 +181,15 @@
                 <span th:if="${pt.isActive != 1}" class="badge badge-danger">Ngưng</span>
             </td>
             <td>
-                <a th:href="@{/product-types/edit/{id}(id=${pt.id})}" style="color: #ffc107;">Sửa</a> |
-                <a th:href="@{/product-types/delete/{id}(id=${pt.id})}"
-                   th:onclick="return confirm('Bạn có chắc muốn xóa loại này?')"
-                   style="color: #dc3545;">Xóa</a>
+                <a th:href="@{'/product-types/edit/' + ${pt.id}}" class="btn-action btn-edit">
+                    ✏️ Sửa
+                </a>
+
+                <a th:href="@{'/product-types/delete/' + ${pt.id}}"
+                   class="btn-action btn-delete"
+                   onclick="return confirm('Bạn có chắc chắn muốn xóa loại sản phẩm này không? Tất cả dữ liệu liên quan sẽ bị mất!')">
+                    🗑️ Xóa
+                </a>
             </td>
         </tr>
         </tbody>

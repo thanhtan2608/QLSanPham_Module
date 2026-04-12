@@ -72,7 +72,9 @@
         <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 25px;">
 
         <form th:action="@{/product-types/save}" th:object="${productType}" method="post">
+            <input type="hidden" th:field="*{id}" />
             <div class="form-group">
+
                 <label>Tên danh mục mới:</label>
                 <input type="text" th:field="*{typeName}"
                        required
@@ -91,7 +93,7 @@
                    th:errors="*{isActive}"></p>
             </div>
 
-            <button type="submit" class="btn-save">✨ LƯU DANH MỤC</button>
+            <button type="submit" class="btn-save">✨ LƯU</button>
         </form>
 
         <a th:href="@{/product-types}" class="back-link">⬅ Quay lại danh sách</a>

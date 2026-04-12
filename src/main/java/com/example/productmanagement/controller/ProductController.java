@@ -1,8 +1,10 @@
 package com.example.productmanagement.controller;
 
 import com.example.productmanagement.entity.Product;
+import com.example.productmanagement.entity.ProductType;
 import com.example.productmanagement.repository.ProductTypeRepository;
 import com.example.productmanagement.service.ProductService;
+import com.example.productmanagement.service.ProductTypeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -23,11 +26,25 @@ public class ProductController {
     private ProductTypeRepository typeRepo;
     @Autowired
     private ProductTypeRepository productTypeRepo;
+    @Autowired
+    private ProductTypeService typeService;
 
     @GetMapping("/products")
-    public String viewHomePage(Model model) {
-        model.addAttribute("listProducts", service.getAll());
-        model.addAttribute("listTypes", typeRepo.findAll());
+    public String viewHomePage(Model model,
+                               @RequestParam(name = "typeId", required = false) Long typeId,
+                               @RequestParam(name = "keyword", required = false) String keyword,
+                               @RequestParam(name = "sortField", defaultValue = "createdAt") String sortField,
+                               @RequestParam(name = "sortDir", defaultValue = "desc") String sortDir
+                                ) {
+        List<Product> listProducts = service.getAll(typeId,keyword,sortField, sortDir);
+
+        model.addAttribute("listProducts", listProducts);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("selectedTypeId", typeId);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("listTypes", typeRepo.findAllByIsActive(1));
+
         return "index"; // Sẽ tìm file index.html trong thư mục templates
     }
     // 1. Hiển thị Form tạo mới
@@ -37,7 +54,8 @@ public class ProductController {
         model.addAttribute("product", product);
 
         // Lấy danh sách loại sản phẩm để hiện trong ô chọn (select)
-        model.addAttribute("listTypes", productTypeRepo.findAll());
+        List<ProductType> listTypes = typeService.getActiveTypes();
+        model.addAttribute("listTypes", listTypes);
 
         return "product-form"; // Tên file HTML tạo ở bước 3
     }
@@ -135,7 +153,7 @@ public class ProductController {
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Product product = service.getById(id);
         model.addAttribute("product", product);
-        model.addAttribute("listTypes", productTypeRepo.findAll());
+        model.addAttribute("listTypes", productTypeRepo.findAllByIsActive(1));
         return "product-edit"; // Tên file HTML mới của bạn
     }
     // 2. Xử lý cập nhật (Dùng mapping riêng /update)
@@ -146,7 +164,8 @@ public class ProductController {
                                 Model model
                                 ) throws IOException{
         if (result.hasErrors()) {
-            model.addAttribute("listTypes", productTypeRepo.findAll());
+
+            model.addAttribute("listTypes", productTypeRepo.findAllByIsActive(1));
             return "product-edit";
         }
 

@@ -3,6 +3,7 @@ package com.example.productmanagement.service;
 import com.example.productmanagement.entity.Product;
 import com.example.productmanagement.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +14,16 @@ public class ProductService {
     @Autowired
     private ProductRepository repo;
 
-    public List<Product> getAll() {
-        return repo.findByIsDeleted(0);
+    public List<Product> getAll(Long typeId,String keyword,String field, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc")
+                ? Sort.by(field).ascending()
+                : Sort.by(field).descending();
+        if (keyword != null && !keyword.isEmpty()|| typeId != null) {
+            return repo.searchActiveProducts(typeId,keyword, sort);
+        }
+
+        // 2. Gọi Repository lọc sản phẩm chưa xóa (0) và truyền sort vào
+        return repo.findByIsDeleted(0, sort);
     }
 
     public void save(Product p) {
@@ -47,6 +56,7 @@ public class ProductService {
         // Gọi sang Repository để lấy dữ liệu
         return repo.findByProductCode(productCode);
     }
+
 
     }
 

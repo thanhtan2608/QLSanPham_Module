@@ -24,16 +24,23 @@ public class ProductTypeService {
 
     // Tìm kiếm loại sản phẩm theo ID
     public ProductType getById(Long id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy loại sản phẩm với ID: " + id));
     }
 
     // Xóa loại sản phẩm (Xóa hẳn hoặc bạn có thể làm xóa mềm tương tự Product)
     public void deleteType(Long id) {
-        repo.deleteById(id);
+        // Kiểm tra xem ID có tồn tại không trước khi xóa
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
+        }
     }
 
     // Kiểm tra tồn tại theo ID
     public boolean existsById(Long id) {
         return repo.existsById(id);
     }
+    public List<ProductType> getActiveTypes() {
+        return repo.findAllByIsActive(1);
+    }
+
 }
